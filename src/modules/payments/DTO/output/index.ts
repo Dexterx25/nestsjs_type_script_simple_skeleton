@@ -1,0 +1,1 @@
+export * from './genericOutPut.dto'

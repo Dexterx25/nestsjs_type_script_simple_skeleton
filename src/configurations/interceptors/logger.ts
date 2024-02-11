@@ -10,15 +10,13 @@ import { LoggerService } from '../../utils/logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: LoggerService | any) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
-
     const ip = this.getIP(request);
-
     this.logger.log(
       `Incoming Request on ${request.path}`,
       `method=${request.method} ip=${ip}`,
