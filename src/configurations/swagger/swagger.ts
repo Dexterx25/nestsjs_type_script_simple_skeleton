@@ -1,16 +1,16 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import {config as configEnv} from '../../configurations/config/envs'
 export class SwaggerConfig {
   static ConfigSwaggerModule(app: INestApplication): void {
     const config = new DocumentBuilder()
       .addBearerAuth()
-      .setTitle('Cirugia Service')
+      .setTitle(`${configEnv.name_app}`)
       .setVersion('v0.0.1')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/v1/cirugia/docs', app, document, {
+    SwaggerModule.setup(`${configEnv.url_selft_api}/docs`, app, document, {
       swaggerOptions: {
         filter: true,
         showRequestDuration: true,
