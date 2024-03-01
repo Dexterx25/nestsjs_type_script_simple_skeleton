@@ -6,19 +6,20 @@ const config = {
     integrations: {
         generic_implementation: {
             envs: {
-                apiKey: process.env.GENERIC_KEY,
-                privateKey: process.env.GENERIC_PRIVATE_KEY,
-                lang: process.env.GENERIC_LANG || 'ES',
+                apiKey: process.env.APIKEY_EPAYCO,
+                privateKey: process.env.PRIVATEKEY_EPAYCO,
+                lang: process.env.LANG_EPAYCO || 'ES',
                 test: process.env.NODE_ENV === 'dev',
-                publicKey: process.env.GENERIC_PUBLIC_KEY
+                publicKey: process.env.PUBLIC_KEY
             },
-            url: process.env.GENERIC_URL_IMPLEMENTATION
+            url: process.env.URL_EPAYCO
         },
     },
     ENV_license_key: process.env.ENV_license_key,
     url_selft_api: process.env.URL_SELFT_API,
     environment: ENVIRONMENT.configEnvironment,
     name_app: process.env.NAME_APP,
+    type_db: process.env.TYPE_DB || 'mongodb',
     swagger: {
         user: process.env.SWAGGER_USER,
         password: process.env.SWAGGER_PASS,
