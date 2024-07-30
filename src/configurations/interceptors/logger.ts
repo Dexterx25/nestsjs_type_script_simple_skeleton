@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoggerService } from '../../utils/logger';
+import { LoggerService, WinstomServiceLogger } from '../../utils/logger';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService | any) {}
+  constructor(private readonly logger: LoggerService | WinstomServiceLogger) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();

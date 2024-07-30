@@ -4,9 +4,9 @@ import { DatabaseModule } from "src/dataAccess/databases";
 import { GenericModule } from "./modules/payments/generic.module";
 import { ImplementationsModules } from "./dataAccess/implementations/implementations.module";
 import { ExceptionsModule } from "./configurations/exceptions";
-import { APP_INTERCEPTOR } from "@nestjs/core";
+// import { APP_INTERCEPTOR } from "@nestjs/core";
 import * as dotenv from 'dotenv';
-import { ErrorInterceptor } from "./configurations/exceptions/interceptor";
+// import { ErrorInterceptor } from "./configurations/exceptions/interceptor";
 dotenv.config();
 
 
@@ -20,12 +20,12 @@ dotenv.config();
     ImplementationsModules,
     ExceptionsModule,
   ],
-  providers: [
+/*   providers: [
     {
       provide: APP_INTERCEPTOR,
       useClass: ErrorInterceptor,
     },
-  ]
+  ] */
 })
 export class AppModule {}
  

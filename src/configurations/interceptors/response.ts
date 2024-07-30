@@ -7,6 +7,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { LoggerService, WinstomServiceLogger } from 'src/utils/logger';
 
 export class ResponseFormat<T> {
   @ApiProperty()
@@ -22,6 +23,9 @@ export class ResponseFormat<T> {
 export class ResponseInterceptor<T>
   implements NestInterceptor<T, ResponseFormat<T>>
 {
+  constructor(
+    public readonly logger: WinstomServiceLogger | LoggerService
+  ){}
   intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -30,14 +34,17 @@ export class ResponseInterceptor<T>
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
     const response = httpContext.getResponse();
-
     return next.handle().pipe(
-      map((data) => ({
-        data,
-        duration: `${Date.now() - now}ms`,
-        method: request.method,
-        status: response.statusCode,
-      })),
+      map((data) => {
+        const res = {
+          data,
+          duration: `${Date.now() - now}ms`,
+          method: request.method,
+          status: response.statusCode,
+        }
+        this.logger.log("ResponseInterceptor", JSON.stringify(res))
+        return res
+      }),
     );
   }
 }

@@ -1,3 +1,6 @@
+import 'dotenv/config';
+require('newrelic');
+require('../newrelic.js')
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
@@ -8,19 +11,19 @@ import {
   NestExpressApplication,
   ExpressAdapter,
 } from "@nestjs/platform-express";
-import { LoggerService } from "./utils/logger";
+import { LoggerService, WinstomServiceLogger } from "./utils/logger";
 import { LoggingInterceptor, TimeoutInterceptor } from "./configurations/interceptors";
 import { ResponseInterceptor } from "./configurations/interceptors/response";
 import { config } from "./configurations/config/envs";
 import * as dotenv from 'dotenv';
-
+import { ErrorInterceptor } from "./configurations/exceptions/interceptor";
+import { HandleErrorservice } from "./configurations/exceptions";
 
 
 async function bootstrap() {
   dotenv.config(); // Load environment variables from .env file
-
-  const logger = new LoggerService();
-
+  const logger = process.env.NODE_ENV === 'dev' ? new LoggerService() : new WinstomServiceLogger(); 
+  logger.debug('AAAAAA', 'AAAAAAAAAAddd')
   const paths = { public: "", views: "" };
   if (existsSync(join(__dirname, "views"))) {
     paths.public = join(__dirname, "public");
@@ -41,10 +44,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(
     new LoggingInterceptor(logger),
-    new ResponseInterceptor(),
+    new ResponseInterceptor(logger),
     new TimeoutInterceptor(),
+    new ErrorInterceptor(new HandleErrorservice(), logger),
   );
-   await configSwagger(app)
+  await configSwagger(app)
   await app.listen(3000, () => {
     logger.log('APP', `${config.name_app} is running on http://localhost:${3000}`);
     logger.debug(
