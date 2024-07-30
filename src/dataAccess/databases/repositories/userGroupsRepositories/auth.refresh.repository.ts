@@ -1,28 +1,28 @@
 //import { Auth } from "src/dataAccess/databases/postgresql/entities";
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Auth } from 'src/dataAccess/databases/postgresql/entities';
+import { AuthRefresh } from 'src/dataAccess/databases/postgresql/entities';
 import { MongoRepository } from 'typeorm';
 import { RepositoryAbs } from '../abstractRepositoryMethdos';
 import { v4 as uuidv4 } from 'uuid';
 
 
 @Injectable()
-export class AuthRepository extends RepositoryAbs {
+export class AuthRefreshRepository extends RepositoryAbs {
     constructor(
-        @InjectRepository(Auth)
-        private readonly authRepository: MongoRepository<Auth>,
+        @InjectRepository(AuthRefresh)
+        private readonly authRepository: MongoRepository<AuthRefresh>,
     ){super()}
     async create({
-      access_token,
       expiration_date,
       user_id,
+      refresh_token
     }) {
      const instance = await this.authRepository.create({
-      access_token, 
+      auth_refresh_id: uuidv4(),
       expiration_date,
       user_id,
-      auth_id: uuidv4()
+      refresh_token
     })   
      return instance
     }

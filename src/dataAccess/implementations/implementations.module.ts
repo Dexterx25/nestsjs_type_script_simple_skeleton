@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { GenericServiceImplementation } from './generic_implementation';
 import { AxiosDataAccess } from '../recurses/axios';
 import { ExceptionsModule } from 'src/configurations/exceptions';
+import { GenericServiceImplementation } from './generic_implementation';
 
 @Module({
   imports: [ExceptionsModule],

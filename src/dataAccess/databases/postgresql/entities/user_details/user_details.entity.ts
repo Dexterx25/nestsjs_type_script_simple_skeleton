@@ -1,5 +1,5 @@
 import { Timestamps } from "../timestamp/timestamp.entity";
-import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from "typeorm";
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { config } from "src/configurations/config/envs";
 import { User } from "../users";
 @Entity(`${config.name_app}_user_details`)
@@ -25,7 +25,8 @@ export class UserDetails extends Timestamps {
   @Column({ type: 'timestamp'})
   date_birthday?: string;
   
-  @ManyToOne(_type => User, user => user.user_id)
-  user_id!: User;
+  @ManyToOne(_type => User, user => user.userDetails, { nullable: false })
+  @JoinColumn({ name: 'user_id' })
+  user_id!: string;
 
 }
