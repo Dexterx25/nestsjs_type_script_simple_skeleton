@@ -14,8 +14,8 @@ export class AuthRefresh extends Timestamps {
   @Column({ type: "timestamp", select: false })
   expiration_date?: string;
 
-  @JoinColumn()
   @OneToOne(_type => User, user => user.user_id)
+  @JoinColumn({name: 'user_id'})
   user_id!: User;
 
 }

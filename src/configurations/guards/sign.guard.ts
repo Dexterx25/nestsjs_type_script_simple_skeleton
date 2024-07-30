@@ -1,17 +1,17 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  UnauthorizedException,
-} from '@nestjs/common';
 import { GuardsService } from './guards.service';
 import { ConfigService } from '@nestjs/config';
 import { verify } from 'jsonwebtoken';
-import { IAccess } from './interface/guards.interface';
+import {
+  UnauthorizedException,
+  ForbiddenException,
+  ExecutionContext,
+  CanActivate,
+  Injectable,
+} from '@nestjs/common';
+import { ISign } from '../jwt';
 
 @Injectable()
-export class AccessGuard implements CanActivate {
+export class SignGuard implements CanActivate {
   constructor(
     private readonly guardService: GuardsService,
     private readonly config: ConfigService,
@@ -21,17 +21,17 @@ export class AccessGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) throw new UnauthorizedException('Null Access Token'); //Null token
+    if (token == null) throw new UnauthorizedException('Null Sign Token'); //Null token
 
     try {
       const user = verify(
         token,
-        `${this.config.get<string>('JWT_ACCESS_KEY')}`,
-      ) as IAccess;
+        `${this.config.get<string>('JWT_SIGN_KEY')}`,
+      ) as ISign;
       req.session = user; //User Session
-      await this.guardService.validateAccess(token, user.id);
+      await this.guardService.validateSignToken(token, user.member);
     } catch (error) {
-      throw new ForbiddenException('Invalid Access Token');
+      throw new ForbiddenException('Invalid Sign Token');
     }
     return true;
   }

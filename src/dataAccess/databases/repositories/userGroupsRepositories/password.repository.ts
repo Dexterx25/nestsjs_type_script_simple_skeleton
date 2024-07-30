@@ -17,6 +17,6 @@ export class PasswordsRepository extends RepositoryAbs {
         user_id,
         is_vigent,
       })
-     return  await this.authRepository.save(instance)
+     return  instance
     }
 }

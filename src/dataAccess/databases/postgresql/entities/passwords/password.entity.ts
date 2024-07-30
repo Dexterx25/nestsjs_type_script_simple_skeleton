@@ -1,5 +1,5 @@
 import { Timestamps } from "../timestamp/timestamp.entity";
-import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from "typeorm";
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { config } from "src/configurations/config/envs";
 import { User } from "../users";
 @Entity(`${config.name_app}_passwords`)
@@ -15,8 +15,9 @@ export class Passwords extends Timestamps {
 
   @Column({ type: 'boolean' })
   is_vigent!: boolean;
-  
-  @ManyToOne(_type => User, user => user.user_id)
-  user_id!: User;
+
+  @ManyToOne(_type => User, user => user.passwords, { nullable: false })
+  @JoinColumn({ name: 'user_id' })
+  user_id!: string;
 
 }
