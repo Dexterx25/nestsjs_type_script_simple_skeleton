@@ -1,7 +1,9 @@
+import { FindOneOptions, FindManyOptions } from "typeorm";
+
 export abstract class RepositoryAbs {
-    create(..._props: any): any{}
-    findAll(..._props: any): any{}
-    findOne(..._props: any): any{}
-    updateByCondition(..._props: any): any{}
-    deleteByCondition(..._props: any): any{}
+    create(_props: any): any{}
+    findAll(_props: FindManyOptions): any{}
+    findOne(_props: FindOneOptions): any{}
+    updateByCondition(_props: FindOneOptions): any{}
+    deleteByCondition(_props: FindOneOptions): any{}
 }

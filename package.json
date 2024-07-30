@@ -19,11 +19,13 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
-        "migrations:generate": "rimraf migration && npm run typeorm -- migration:generate --config ./orm.config.json --name",
-        "migrations:run": "npm run typeorm -- migration:run --config ./orm.config.json",
-        "migrations:drop": "npm run typeorm -- schema:drop --config ./orm.config.json",
-        "migrations:show": "npm run typeorm -- migration:show --config ./orm.config.json"
+        "typeorm": "npm run prebuild && npm run build && ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/ormconfig.ts",
+        "migrations:generate": "npm run typeorm migration:generate -n ./migrations/migration",
+        "migrations:create": "typeorm migration:create ./migrations/migration-create",
+        "migrations:run": "npm run typeorm -- migration:run",
+        "migrations:drop": "npm run typeorm -- schema:drop",
+        "migrations:show": "npm run typeorm -- migration:show",
+        "migrations:revert": "npm run typeorm -- migration:revert"
     },
     "dependencies": {
         "@nestjs/axios": "^3.0.0",
