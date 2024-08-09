@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService, WinstomServiceLogger } from '../../utils/logger';
+import * as morgan from 'morgan';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -16,10 +17,12 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
+    const response = httpContext.getResponse();
     const ip = this.getIP(request);
+    // Usar Morgan para registrar el resto de la solicitud
     this.logger.log(
-      `Incoming Request on ${request.path}`,
-      `method=${request.method} ip=${ip}`,
+      `Incoming Request on ${request.path} method=${request.method} ip=${ip} extendedData=${morgan('combined')(request, response, next)}`,
+      `body=${JSON.stringify(request.body)}`,
     );
 
     return next.handle().pipe(
