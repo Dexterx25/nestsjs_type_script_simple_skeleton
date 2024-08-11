@@ -24,7 +24,7 @@ export class ResponseInterceptor<T>
   implements NestInterceptor<T, ResponseFormat<T>>
 {
   constructor(
-    public readonly logger: WinstomServiceLogger | LoggerService
+    public readonly logger?: WinstomServiceLogger | LoggerService
   ){}
   intercept(
     context: ExecutionContext,
@@ -42,7 +42,6 @@ export class ResponseInterceptor<T>
           method: request.method,
           status: response.statusCode,
         }
-        this.logger.log("ResponseInterceptor", JSON.stringify(res))
         return res
       }),
     );
