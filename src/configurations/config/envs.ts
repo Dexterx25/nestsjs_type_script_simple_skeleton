@@ -15,6 +15,7 @@ const config = {
             url: process.env.URL_EPAYCO
         },
     },
+    timeout_time: process.env.TIME_OUT_TIME,
     ENV_license_key_new_relic: process.env.ENV_license_key_new_relic,
     app_name_new_relic: process.env.app_name_new_relic,
     url_selft_api: process.env.URL_SELFT_API,

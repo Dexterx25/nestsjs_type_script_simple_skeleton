@@ -17,7 +17,7 @@
       level: 'debug',
     },
     application_logging: {
-      enabled: false,
+      enabled: true,
     },
     /* ... rest of configuration .. */
    }

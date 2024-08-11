@@ -6,12 +6,11 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoggerService, WinstomServiceLogger } from '../../utils/logger';
-import * as morgan from 'morgan';
+import { WinstomServiceLogger } from '../../utils/logger';
 
 @Injectable()
-export class LoggingInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService | WinstomServiceLogger) {}
+export class LoggingRequetInterceptor implements NestInterceptor {
+  constructor(private readonly logger:WinstomServiceLogger) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
@@ -19,17 +18,22 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = httpContext.getRequest();
     const response = httpContext.getResponse();
     const ip = this.getIP(request);
-    // Usar Morgan para registrar el resto de la solicitud
     this.logger.log(
-      `Incoming Request on ${request.path} method=${request.method} ip=${ip} extendedData=${morgan('combined')(request, response, next)}`,
       `body=${JSON.stringify(request.body)}`,
+      `Incoming Request on ${request.path} method=${request.method} ip=${ip}`,
     );
 
     return next.handle().pipe(
-      tap(() => {
+      tap(({data}) => {
+        const res = {
+          data,
+          duration: `${Date.now() - now}ms`,
+          method: request.method,
+          status: response.statusCode,
+        }
         this.logger.log(
-          `End Request for ${request.path}`,
-          `method=${request.method} ip=${ip} duration=${Date.now() - now}ms`,
+          `response=${JSON.stringify(res)}`,
+          `Incoming Request on ${request.path} method=${request.method} ip=${ip}`,
         );
       }),
     );

@@ -12,18 +12,17 @@ import {
   ExpressAdapter,
 } from "@nestjs/platform-express";
 import { LoggerService, WinstomServiceLogger } from "./utils/logger";
-import { LoggingInterceptor, TimeoutInterceptor } from "./configurations/interceptors";
-import { ResponseInterceptor } from "./configurations/interceptors/response";
+import { LoggingRequetInterceptor, TimeoutInterceptor } from "./configurations/interceptors";
 import { config } from "./configurations/config/envs";
 import * as dotenv from 'dotenv';
 import { ErrorInterceptor } from "./configurations/exceptions/interceptor";
 import { HandleErrorservice } from "./configurations/exceptions";
+import { ResponseInterceptor } from './configurations/interceptors/response';
 
 
 async function bootstrap() {
   dotenv.config(); // Load environment variables from .env file
   const logger = process.env.NODE_ENV === 'dev' ? new LoggerService() : new WinstomServiceLogger(); 
-  logger.debug('AAAAAA', 'AAAAAAAAAAddd')
   const paths = { public: "", views: "" };
   if (existsSync(join(__dirname, "views"))) {
     paths.public = join(__dirname, "public");
@@ -43,8 +42,8 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(
-    new LoggingInterceptor(logger),
-    new ResponseInterceptor(logger),
+    new LoggingRequetInterceptor(logger),
+    new ResponseInterceptor(),
     new TimeoutInterceptor(),
     new ErrorInterceptor(new HandleErrorservice(), logger),
   );
